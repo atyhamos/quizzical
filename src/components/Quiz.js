@@ -2,12 +2,14 @@ import React from "react"
 import "../style.css"
 import line from "../images/line.png"
 import {nanoid} from "nanoid"
+import {decode} from 'html-entities'
 
 export default function Quiz(props) {
     const [numberOfGames, setNumberOfGames] = React.useState(0)
     const [questions, setQuestions] = React.useState([])
     const [answers, setAnswers] = React.useState([])
     const [isPlaying, setPlaying] = React.useState(true)
+
 
     React.useEffect(() => {
         fetch("https://opentdb.com/api.php?amount=5")
@@ -38,14 +40,14 @@ export default function Quiz(props) {
             return (
             <button className="answer" onClick={() => selectAnswer(answer.id)} 
             style={styles}>
-            {formatQuotes(answer.value)}
+            {decode(answer.value)}
             </button>
         )
         })
                        
         return (
             <div className="questions">
-                <h2 className="question">{formatQuotes(question.question)}</h2>
+                <h2 className="question">{decode(question.question)}</h2>
                     <div className="answers">
                         {answerElements}
                     </div>
@@ -106,14 +108,6 @@ export default function Quiz(props) {
             setNumberOfGames(prevNumber => prevNumber + 1)
             setPlaying(true)
         }
-    }
-
-    function formatQuotes(text) {
-        return text.replace(/&quot;|&ldquo;/g, '\"')
-        .replace(/&#039;/g, '\'')
-        .replace(/&eacute;/g, '\é')
-        .replace(/&amp;/g, '\&')
-        .replace(/&deg;/g, '°')
     }
 
     return (
